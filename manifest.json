@@ -1,0 +1,9 @@
+{
+  "name": "FITRUSH",
+  "short_name": "FITRUSH",
+  "description": "Your weekly fitness and healthy-habit challenge.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#11111b",
+  "theme_color": "#7c3aed"
+}
