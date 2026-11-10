@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101014">
+<title>FITRUSH - Weekly Fitness Challenges</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#101014;
+ color:#fff;
+ font-family:Arial,sans-serif;
+ padding:22px;
+}
+header{padding:20px 0}
+.logo{font-size:30px;font-weight:900;letter-spacing:2px}
+.logo span{color:#a78bfa}
+.subtitle{color:#aaa;margin-top:8px}
+.card{
+ background:#1c1c24;
+ border:1px solid #30303b;
+ border-radius:18px;
+ padding:20px;
+ margin:18px 0;
+}
+h2{font-size:21px}
+.progress{
+ height:10px;
+ background:#343440;
+ border-radius:20px;
+ overflow:hidden;
+}
+.bar{
+ height:100%;
+ width:0%;
+ background:#a78bfa;
+ transition:.3s;
+}
+.task{
+ display:flex;
+ align-items:center;
+ gap:13px;
+ padding:15px 0;
+ border-bottom:1px solid #343440;
+}
+.task:last-child{border:0}
+.task input{
+ width:21px;
+ height:21px;
+ accent-color:#a78bfa;
+}
+.task label{flex:1}
+.done{text-decoration:line-through;color:#888}
+button{
+ background:#a78bfa;
+ color:#111;
+ border:0;
+ padding:13px 18px;
+ border-radius:12px;
+ font-weight:bold;
+ cursor:pointer;
+}
+.secondary{
+ background:#30303b;
+ color:white;
+}
+.stat{
+ display:flex;
+ justify-content:space-between;
+ color:#bbb;
+ margin:12px 0;
+}
+footer{
+ color:#777;
+ text-align:center;
+ font-size:12px;
+ padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">FIT<span>RUSH</span></div>
+ <div class="subtitle">Challenge yourself. Build healthy habits.</div>
+</header>
+
+<section class="card">
+ <h2>YOUR WEEKLY PROGRESS</h2>
+ <div class="stat">
+  <span>Completed challenges</span>
+  <strong id="count">0 / 7</strong>
+ </div>
+ <div class="progress">
+  <div class="bar" id="bar"></div>
+ </div>
+ <p id="message">Your journey starts today.</p>
+</section>
+
+<section class="card">
+ <h2>🔥 WEEKLY CHALLENGE</h2>
+ <p style="color:#aaa">Complete these activities at your own pace. Rest when needed.</p>
+ <div id="tasks"></div>
+ <button onclick="resetTasks()" class="secondary">
+  Reset Week
+ </button>
+</section>
+
+<section class="card">
+ <h2>YOUR FITNESS REMINDERS</h2>
+ <div class="stat"><span>💧 Stay hydrated</span><span>Daily</span></div>
+ <div class="stat"><span>😴 Get enough sleep</span><span>Daily</span></div>
+ <div class="stat"><span>🧘 Take rest breaks</span><span>As needed</span></div>
+ <div class="stat"><span>❤️ Enjoy movement</span><span>Always</span></div>
+</section>
+
+<footer>
+ FITRUSH © 2026<br>
+ Progress at your own pace. Your health comes first.
+</footer>
+
+<script>
+const challenges=[
+ "10-minute comfortable walk",
+ "Gentle stretching",
+ "Dance or move to your favorite song",
+ "Take an active outdoor break",
+ "Try a gentle mobility routine",
+ "Choose a fun recreational activity",
+ "Rest and recover"
+];
+
+const saved=JSON.parse(localStorage.getItem("fitrush")||"[]");
+
+function render(){
+ const container=document.getElementById("tasks");
+ container.innerHTML="";
+
+ challenges.forEach((task,i)=>{
+  const checked=saved.includes(i);
+  const item=document.createElement("div");
+  item.className="task";
+
+  const checkbox=document.createElement("input");
+  checkbox.type="checkbox";
+  checkbox.checked=checked;
+  checkbox.addEventListener("change",()=>{
+   if(checkbox.checked){
+    if(!saved.includes(i))saved.push(i);
+   }else{
+    const index=saved.indexOf(i);
+    if(index!==-1)saved.splice(index,1);
+   }
+   localStorage.setItem("fitrush",JSON.stringify(saved));
+   render();
+  });
+
+  const label=document.createElement("label");
+  label.textContent=task;
+  if(checked)label.className="done";
+
+  item.append(checkbox,label);
+  container.append(item);
+ });
+
+ const total=saved.length;
+ document.getElementById("count").textContent=total+" / 7";
+ document.getElementById("bar").style.width=(total/7*100)+"%";
+ document.getElementById("message").textContent=
+  total===7?"Amazing! You completed this week's activities.":
+  total===0?"Your journey starts today.":
+  "Keep building healthy habits. Every step counts.";
+}
+
+function resetTasks(){
+ saved.length=0;
+ localStorage.removeItem("fitrush");
+ render();
+}
+
+render();
+</script>
+
+</body>
+</html>
